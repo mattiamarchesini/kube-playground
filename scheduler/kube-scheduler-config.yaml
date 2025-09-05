@@ -1,0 +1,11 @@
+# Config to run a custom scheduler by running at startup
+# /usr/local/bin/kube-scheduler --config /etc/kubernetes/config/custom-scheduler-config.yaml
+
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+profiles:
+  - schedulerName: my-scheduler
+leaderElection: # Used when having different copies of the scheduler process running (only one at a time allowed)
+  leaderElect: true
+  resourceNamespace: kube-system
+  resourceName: lock-object-my-scheduler

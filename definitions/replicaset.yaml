@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-replicaset
+  labels:
+    app: myapp
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+  replicas: 3
+  selector: # Specifies which pods are used by the ReplicaSet
+    # Why do we need to specify if we already have the template section? Cause ReplicaSet can also manage pods that are
+    # not created by applying this file. The selector is one of the main differences between ReplicaSets and the old
+    # method called ReplicationController
+    matchLabels:
+      type:
+        front-end # Will match other pods that also have the label type: front-end. You can match more expressive and
+        # flexible queries using set-based selectors (In, NotIn, Exists, DoesNotExist).
