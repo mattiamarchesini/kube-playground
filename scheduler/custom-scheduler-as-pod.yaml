@@ -1,10 +1,13 @@
-# See for more information
+# For more information see
 # https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/#define-a-kubernetes-deployment-for-the-scheduler
 
 apiVersion: v1
 kind: Pod
 metadata:
-  name: my-scheduler
+  name: my-scheduler # add spec.schedulerName: my-scheduler to your pods
+  labels: # It's better to add these labels to consistently identify the static pods that make up the control plane.
+    tier: control-plane
+    component: kube-apiserver
   namespace: kube-system
 spec:
   containers:

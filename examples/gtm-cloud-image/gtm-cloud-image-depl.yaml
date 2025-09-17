@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gtm-app-deployment
+spec:
+  selector:
+    matchLabels:
+      app: gtm-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gtm-app
+    spec:
+      containers:
+        - name: gtm-cloud-image
+          image: gcr.io/cloud-tagging-10302018/gtm-cloud-image:stable
+          command: ["server_bin.js"]
+          #image: yeasy/simple-web
+          #command: ["echo", "ciao"]
+          envFrom:
+            - secretRef:
+              name: gtm-app-secrets
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gtm-app-service
+  labels:
+    app: gtm-app
+spec:
+  type: NodePort # ClusterIP, LoadBalancer, ExternalName
+  ports:
+    - targetPort: 8080
+      port: 8080
+      nodePort: 38080
+  selector:
+    app: gtm-app
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gtm-app-ingress
+  annotations:
+    # Annotazione comune e spesso necessaria per NGINX Ingress Controller
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: "ubuntu-worker-1.local"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gtm-app-service
+                port:
+                  number: 8080

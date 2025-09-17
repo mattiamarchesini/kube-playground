@@ -10,6 +10,21 @@ spec:
   containers:
     - name: nginx-container
       image: nginx
+      command: sleep # Overwrites ENTRYPOINT instruction
+      args: ["10"] # Overwrites CMD instruction
+      env:
+        - name: VAR1
+          value: VALUE1
+        - name: CONFIGMAP_VAR1
+          valueFrom:
+            configMapKeyRef:
+              name: my-app-config # The name of the ConfigMap
+              key: database.url # The key within the ConfigMap to use
+        - name: SECRET1
+          valueFrom:
+            secretKeyRef:
+              name: my-app-secrets # The name of the Secrets file
+              key: database.psw # The key within the Secrets to use
       # Without explicit resource definitions, the scheduler doesn't know how much resource your container needs, and
       # the kubelet doesn't know how to enforce limits.
       resources:
