@@ -13,13 +13,13 @@ services.
 
 To do it manually, one would have to monitor resources using a command like
 
-```console
+```bash
 kubectl top pod my-app-pod
 ```
 
 Then, when the resource is near the threshold, run
 
-```console
+```bash
 kubectl scale deployment my-app --replicas=3
 ```
 
@@ -31,13 +31,13 @@ The horizontal auto-scaler:
 
 You can configure the horizontal auto-scaler by running a command like this
 
-```console
+```bash
 kubectl autoscale deployment my-app --cpu-percent=50 --min=1 --max=10
 ```
 
 Get the status of the auto-scaler by running
 
-```console
+```bash
 kubectl get hpa
 ```
 
@@ -50,7 +50,7 @@ the pods to apply the new values. Vertical scaling is recommended for stateful w
 
 Unlike HPA; the Vertical Pod Autoscaler doesn't come built-in, so we must deploy it as a pod:
 
-```console
+```bash
 kubectl apply -f https://github.com/kubernetes/autoscaler/releases/latest/download/vertical-pod-autoscaler.yaml
 ```
 

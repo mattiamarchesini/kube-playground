@@ -65,13 +65,17 @@ affinity:
 
 ### 2 `preferredDuringSchedulingIgnoredDuringExecution` (Soft Rule ⚖️)
 
-This is a **preference**, not a requirement. The scheduler will try to find a node that meets the criteria and give it a higher score, making it more likely to be chosen. If no such node is available, the pod will be scheduled on any other available node.
+This is a **preference**, not a requirement. The scheduler will try to find a node that meets the criteria and give it a
+higher score, making it more likely to be chosen. If no such node is available, the pod will be scheduled on any other
+available node.
 
 **The point of this is to:**
 
-- **Optimize Performance:** Try to place a latency-sensitive application on a node with a fast SSD (`disk=ssd`) but still allow it to run elsewhere if needed.
-- **Improve Availability:** Prefer to spread pods across different availability zones to minimize the impact of an outage.
-- **Lower Costs:** Prefer to schedule pods on cheaper Spot Instances, but allow them to run on more expensive On-Demand instances if no Spot Instances are available.
+- **Optimize Performance:** Try to place a latency-sensitive application on a node with a fast SSD (`disk=ssd`) but
+  still allow it to run elsewhere if needed.
+- **Improve Availability:** Prefer to spread pods across different zones to minimize the impact of an outage.
+- **Lower Costs:** Prefer to schedule pods on cheaper Spot Instances, but allow them to run on more expensive On-Demand
+  instances if no Spot Instances are available.
 
 #### Example: Weighted Preference
 
@@ -101,4 +105,5 @@ affinity:
 | **Flexibility** | Very limited.                    | Highly flexible for complex scenarios.             |
 | **Analogy**     | A simple lock and key.           | A sophisticated combination lock.                  |
 
-So, the point of **node affinity** is to move beyond basic pod placement and give you granular, flexible, and intelligent control to optimize for performance, cost, and reliability in your cluster.
+So, the point of **node affinity** is to move beyond basic pod placement and give you granular, flexible, and
+intelligent control to optimize for performance, cost, and reliability in your cluster.

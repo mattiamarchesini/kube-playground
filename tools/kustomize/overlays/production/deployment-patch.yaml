@@ -1,0 +1,6 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment # Must match the name in the base
+spec:
+  replicas: 10 # <-- The only change

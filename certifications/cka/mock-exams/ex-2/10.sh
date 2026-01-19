@@ -1,0 +1,1 @@
+ helm uninstall -n atlanta-page-04 atlanta-page-apd

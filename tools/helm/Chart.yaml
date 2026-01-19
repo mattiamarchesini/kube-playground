@@ -1,0 +1,20 @@
+apiVersion: v2 # helm3 uses v2
+version: "1" # version of the helm chart
+appVersion: "1.16.1" # version of the application
+name: hello-world
+description: A web app
+type: application # library
+dependencies:
+  - condition: mariadb.enabled
+    name: mariadb
+    repository: https://charts.bitnamy.com/bitnami
+    version: 9.x.x
+keywords:
+  - application
+  - blog
+  - wordpress
+maintainers:
+  - email: maintainer@example.com
+    name: Maintainer
+home: https://github.com/bitnami/charts/tree/bitnami/wordpress
+icon: https://bitnami.com/assets/stacks/wordpress/img/wordpress-stack-220x234.png

@@ -1,0 +1,24 @@
+# es 4
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  namespace: default
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      name: myapp
+  template:
+    metadata:
+      labels:
+        name: myapp
+    spec:
+      containers:
+        - image: nginx:1.16
+          name: nginx-container
+          resources: {}
+# To perform an update use
+# kubectl set image deployment/myapp-depl nginx=nginx:1.17

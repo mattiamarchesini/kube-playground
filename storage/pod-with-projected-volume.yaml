@@ -1,0 +1,44 @@
+# A projected volume lets you assemble multiple existing data sources (like Secrets, ConfigMaps, tokens...)
+# and mount them as a single directory
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: projected-volume-pod
+  labels:
+    app: myapp
+    version: v1
+spec:
+  volumes:
+  - name: all-in-one-volume
+    projected:
+      sources:
+      # Source 1: A Secret
+      - secret:
+          name: my-user-secret # The name of the Secret to use
+          items:
+            - key: username
+              path: db_user # The file will be named 'db_user' inside the volume
+      # Source 2: A ConfigMap
+      - configMap:
+          name: my-app-config # The name of the ConfigMap to use
+          items:
+            - key: config.properties
+              path: app_config.properties # The file will be named 'app_config.properties'
+      # Source 3: Pod metadata via the Downward API
+      - downwardAPI:
+          items:
+            - path: "pod_labels" # A file named 'pod_labels' will be created...
+              fieldRef:
+                fieldPath: metadata.labels # ...containing the Pod's labels.
+
+  # 2. Mount the single volume into the container.
+  containers:
+  - name: my-container
+    image: busybox
+    command: ["/bin/sh", "-c", "sleep 3600"]
+    resources: {limits:{cpu:""}, requests:{}}
+    volumeMounts:
+    - name: all-in-one-volume # This MUST match the volume name from above
+      mountPath: "/projected-sources" # All sources will appear in this one directory
+      readOnly: true

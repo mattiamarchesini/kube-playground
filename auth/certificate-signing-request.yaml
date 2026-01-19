@@ -1,0 +1,21 @@
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: jane-csr
+spec:
+  expirationSeconds: 600
+  usages:
+    # can use private key to "sign" data
+    - digital signature
+    # can use the server's public key to securely send a session key to the server
+    # (only server can decrypt it with its private key)
+    - key encipherment
+
+    - client auth
+    # proves to the client that it's talking to the authentic server
+    #- server auth
+  groups: # the actions the user is allowed to perform are based on the Roles and ClusterRoles bound to those groups
+    - system:authenticated
+    - app-developers
+  signerName: kubernetes.io/kube-apiserver-client
+  request: a-csr-encoded-in-base64-no-newlines

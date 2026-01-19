@@ -1,0 +1,26 @@
+# Role-based access control
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["list", "get", "create", "update", "delete"]
+    resourceNames: ["blue", "orange"]
+---
+# Binds a role to subjects
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: developer-role-binding
+subjects:
+  - kind: User
+    name: dev01
+    namespace: default # namespace is required
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: developer
+  apiGroup: rbac.authorization.k8s.io

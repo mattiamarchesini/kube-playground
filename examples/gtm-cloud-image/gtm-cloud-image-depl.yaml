@@ -1,60 +1,118 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gtm-app-deployment
+  name: gtm-deployment
+  labels:
+    app: gtm
 spec:
   selector:
     matchLabels:
-      app: gtm-app
+      app: gtm
   replicas: 1
   template:
     metadata:
       labels:
-        app: gtm-app
+        app: gtm
     spec:
       containers:
         - name: gtm-cloud-image
           image: gcr.io/cloud-tagging-10302018/gtm-cloud-image:stable
           command: ["server_bin.js"]
-          #image: yeasy/simple-web
-          #command: ["echo", "ciao"]
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "250m"
           envFrom:
             - secretRef:
-              name: gtm-app-secrets
+                name: gtm-secrets
+          env:
+            - name: RUN_AS_PREVIEW_SERVER
+              value: "true"
           ports:
             - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: gtm-app-service
+  name: gtm-service
   labels:
-    app: gtm-app
+    app: gtm
 spec:
-  type: NodePort # ClusterIP, LoadBalancer, ExternalName
+  type: ClusterIP
   ports:
     - targetPort: 8080
       port: 8080
-      nodePort: 38080
   selector:
-    app: gtm-app
+    app: gtm
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: gtm-app-ingress
-  annotations:
-    # Annotazione comune e spesso necessaria per NGINX Ingress Controller
-    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: gtm-ingress
+  labels:
+    app: gtm
+  #annotations:
+  # for NGINX Ingress Controller
+  #nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: "ubuntu-worker-1.local"
+    - host: "sst.website.com"
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: gtm-app-service
+                name: gtm-service
                 port:
                   number: 8080
+          - path: /healthz
+            pathType: Prefix
+            backend:
+              service:
+                name: gtm-service
+                port:
+                  number: 8080
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: gtm-secrets
+  labels:
+    app: gtm
+spec:
+  refreshInterval: "5m" # How often to check GCSM for updates
+  secretStoreRef:
+    name: gcp-secret-store
+    kind: SecretStore
+  target:
+    name: gtm-secrets # The name of the Kubernetes Secret to be created/synced
+  data:
+    - secretKey: CONTAINER_CONFIG
+      remoteRef:
+        key: stage-gtm-container-config
+        version: latest
+---
+apiVersion: external-secrets.io/v1beta1
+kind: SecretStore
+metadata:
+  name: gcp-secret-store
+spec:
+  provider:
+    gcpsm:
+      auth:
+        workloadIdentity:
+          clusterProjectID: "my-gcp-project-id"
+          serviceAccountRef:
+            name: "eso-sa" # The Kubernetes service account ESO uses
+      projectID: "my-gcp-project-id"

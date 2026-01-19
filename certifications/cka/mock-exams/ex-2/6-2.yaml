@@ -1,0 +1,25 @@
+# test-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dns-test-pod
+spec:
+  containers:
+    - name: busybox
+      image: busybox:1.28
+      # Un comando per tenerlo in vita mentre facciamo i test
+      command:
+        [
+          "sh",
+          "-c",
+          "nslookup nginx-resolver-service > /data/nginx.svc && nslookup 172.17.1.14 > /data/nginx.pod",
+        ]
+      volumeMounts:
+        - name: result-storage
+          mountPath: /data
+      resources: {}
+  volumes:
+    - name: result-storage
+      hostPath:
+        path: /root/CKA
+        type: Directory

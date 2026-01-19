@@ -1,0 +1,26 @@
+spec:
+  gatewayClassName: nginx
+  listeners:
+    - name: http # Il listener HTTP esistente rimane
+      protocol: HTTP
+      port: 80
+      hostname: "kodekloud.com"
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+    # --- AGGIUNGI QUESTA INTERA SEZIONE ---
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: "kodekloud.com"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: kodekloud-tls
+            kind: Secret
+            group: ""
+      allowedRoutes:
+        namespaces:
+          from: Same
+  # --- FINE DELLA SEZIONE DA AGGIUNGERE ---

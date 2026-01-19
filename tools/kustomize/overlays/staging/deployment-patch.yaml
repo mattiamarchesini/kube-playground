@@ -1,0 +1,6 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gtm-app-deployment # Must match the name in the base
+spec:
+  replicas: 3 # <-- The only change

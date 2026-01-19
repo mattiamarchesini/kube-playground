@@ -1,0 +1,3 @@
+# It deploys a custom resource and corresponding controller to the cluster
+# Go to https://operatorhub.io for community-supported operators
+apiVersion:

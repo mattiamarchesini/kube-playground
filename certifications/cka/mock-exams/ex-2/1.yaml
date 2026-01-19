@@ -1,0 +1,18 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-sc
+  # This annotation makes this the default StorageClass for the cluster.
+  # Any new PersistentVolumeClaim without a specific storageClassName
+  # will attempt to use this StorageClass.
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+# The provisioner for local volumes that are manually created by an administrator.
+# Kubernetes will not automatically create volumes with this class.
+provisioner: kubernetes.io/no-provisioner
+# This delays the binding of a PersistentVolumeClaim until a Pod that uses it
+# is scheduled. This ensures the volume is provisioned on a node where the
+# Pod can actually run.
+volumeBindingMode: WaitForFirstConsumer
+# This allows the size of volumes created with this class to be increased after creation.
+allowVolumeExpansion: true

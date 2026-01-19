@@ -12,7 +12,7 @@ spec:
       matchLabels:
         app: my-app
     spec:
-      contaniners:
+      containers:
         - name: my-app
           image: nginx
           resizePolicy:

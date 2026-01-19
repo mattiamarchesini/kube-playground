@@ -1,0 +1,48 @@
+# The kube-apiserver process accepts an argument --encryption-provider-config that specifies a path to a configuration
+# file that control how Kubernetes API data is encrypted in etcd
+
+apiVersion: apiserver.config.k8s.io/v1
+kind: EncryptionConfiguration
+resources:
+  - resources:
+      - secrets # Only secret objects are going to be encrypted
+    providers:
+      # This configuration does not provide data confidentiality. The first
+      # configured provider is specifying the "identity" mechanism, which
+      # stores resources as plain text.
+      #
+      - identity: {} # plain text, in other words NO encryption
+      - aesgcm:
+          keys:
+            - name: key1
+              secret: ""
+            - name: key2
+              secret: ""
+      - aescbc:
+          keys:
+            - name: key1
+              secret: ""
+            - name: key2
+              secret: ""
+      - secretbox:
+          keys:
+            - name: key1
+              secret: ""
+  - resources:
+      - events
+    providers:
+      - identity: {} # do not encrypt Events even though *.* is specified below
+  - resources:
+      - "*.apps" # wildcard match requires Kubernetes 1.27 or later
+    providers:
+      - aescbc:
+          keys:
+            - name: key2
+              secret: ""
+  - resources:
+      - "*.*" # wildcard match requires Kubernetes 1.27 or later
+    providers:
+      - aescbc:
+          keys:
+            - name: key3
+              secret: ""

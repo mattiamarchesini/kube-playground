@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Config
+clusters:
+  - name: "cluster01"
+    cluster:
+      server: "https://server-url.com/k8s/clusters/cluster01"
+
+users:
+  - name: "user01"
+    user:
+      token: "kubeconfig-u-<token>"
+
+contexts:
+  - name: "user01@cluster01"
+    context:
+      user: "user01"
+      cluster: "cluster01"
+namespace: some-namespace
+
+current-context: "context01"

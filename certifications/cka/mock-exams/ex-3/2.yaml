@@ -1,0 +1,44 @@
+# Account used by machines to perform tasks
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pvviewer
+  namespace: default
+---
+# Role that persists for the entire cluster (not a single namespace)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pvviewer-role
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["list"]
+---
+# Binds cluster role to subjects
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pvviewer-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: pvviewer
+    namespace: default
+    apiGroup: ""
+roleRef:
+  kind: ClusterRole
+  name: pvviewer-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvviewer
+  labels:
+    app.kubernetes.io/name: pvviewer
+spec:
+  serviceAccountName: pvviewer
+  containers:
+    - name: pvviewer
+      image: redis
+      resources: {}

@@ -1,0 +1,16 @@
+# It provides a unique IP address and DNS name that other nodes in the cluster can use to connect to a service running
+# on a pod. It also acts as a basic load balancer, distributing traffic across all the healthy pods.
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+  labels:
+    app: myapp
+spec:
+  type: ClusterIP # NodePort, LoadBalancer, ExternalName
+  ports:
+    - targetPort: 80 # the port on which the app inside the container is listening on
+      port: 80 # the port on which the Service is listening on
+      #nodePort: 30008 # Port on the node IP (makes sense only for NodePort and LoadBalancer)
+  selector: # This links the service to the pod with the correct labels
+    app: myapp

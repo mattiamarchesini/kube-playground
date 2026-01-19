@@ -1,0 +1,8 @@
+apiVersion: mysite.com/v1
+kind: MyResource
+metadata:
+  name: myreource01
+spec:
+  var1: "hello"
+  var2: 1
+  var3: 2.3

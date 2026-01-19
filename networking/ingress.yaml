@@ -1,0 +1,36 @@
+# Acts as "smart" router with a set of rules to give external access to services in your cluster.
+# Mostly used for http/s web traffic
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp-ingress
+  annotations:
+    # Common annotation for NGINX Controller. Not necessary if you only have path: /
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    # you can find examples of other annotations being used at https://kubernetes.github.io/ingress-nginx/examples/
+spec:
+  ingressClassName: nginx-ic # Must match an existing IngressClass
+  rules:
+    - host: "myapp.mydomain.com" # Il dominio pubblico
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: myapp-service # 1. Invia il traffico a questo Service...
+                port:
+                  number: 80 # 2. ...sulla sua porta 80.
+---
+# Associates a ingress to a controller.
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+  name: nginx-ic
+  annotations:
+    # Makes this class the default
+    ingressclass.kubernetes.io/is-default-class: "true"
+spec:
+  controller: k8s.io/ingress-nginx # Default k8s ingress that uses nginx

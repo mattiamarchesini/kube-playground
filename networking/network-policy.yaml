@@ -1,0 +1,42 @@
+# By default, all pods can communicate with each other.
+# Remember that not all CNI (e.g. flannel) support network policies.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-pod1-to-db
+  # This policy will apply to pods in the same namespace where it is created
+  namespace: default
+spec:
+  # Apply this policy to pods with the 'app: mysql-db' label
+  podSelector:
+    matchLabels:
+      app: mysql-db
+
+  # You can specify both Ingress and Egress rules.
+  # This policy only affects incoming (Ingress) traffic, but remember that the response back to the incoming traffic
+  # is automatically allowed
+  policyTypes:
+    - Ingress
+
+  # Define the Ingress rules.
+  ingress:
+    - from:
+        # Allow traffic FROM pods with the 'app: pod1' label in the 'prod' namespace.
+        - podSelector:
+            matchLabels:
+              app: pod1
+        - namespaceSelector:
+            matchLabels:
+              kubenetes.io/metadata.name: prod
+
+        # You can also specify IP numbers
+        - ipBlock:
+            cidr: 172.17.0.0/16
+            except:
+              - 172.17.1.0/24
+
+      ports:
+        # Only allow the traffic if it's destined for TCP port 3306.
+        - protocol: TCP
+          port: 3306

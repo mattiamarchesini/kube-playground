@@ -1,0 +1,42 @@
+# es 5
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: john-developer
+spec:
+  # expirationSeconds: 600
+  usages:
+    - digital signature
+    - key encipherment
+    - client auth
+  groups:
+    - system:authenticated
+    - developers
+  signerName: kubernetes.io/kube-apiserver-client
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1ZEQ0NBVHdDQVFBd0R6RU5NQXNHQTFVRUF3d0VhbTlvYmpDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRApnZ0VQQURDQ0FRb0NnZ0VCQUw1RlBFNWZLb2ErT3UzZTllRXJsK0NoK2lPMGZ1ajU3a3BxR0VtTkpGZjBIOUV0CmpFcW1DZFUzakdkeFcvaW12M056dDZvMWZFU2dJY1YzYXRCditlT2Zyd2RrSUJLK01ZR3M1UjhJb0JkSUlhOWMKZEVmY1hFQlB0d2tNTXM1Y3hEc2s1bnB0UTZ4b0FWSGZjbEoyS1B1SjJ2QWtad0FtcmlCMit2L3l0WWdUQjBNcQpDN0kyY1Vsb05wMG5FOXh5bTlKSFJNVytNdmZQaytVbGFWWmhQMXo1QjRzY21HRkVEUWR4aWhEM1VaUWRZNmRKCjlDMEFra3BJL2VQRmswNjFUMklWQVgyUjBrd2RwUmk4ZGgrbXB1TlYzZ3FVVUNRWWJnWmJwY1pCME1jUS9UZ1kKOWhndXBKdkt2c0NLTU1aYzh0M2JPNWpHVkVlQi9iVy9UVE5vNVJzQ0F3RUFBYUFBTUEwR0NTcUdTSWIzRFFFQgpDd1VBQTRJQkFRQUJVVm9RSVJQbHlISmpQS1ZvSXZhZ1paSGlqQ1lsUjdnazluTDd4NTNmMEExZmdqbGFXZU5aCjdoVWErdTczRXYzZUZ2WnZaU053REs5cWVTMVRBSzhYSVpjOHVPQTZyaEUyOEkwSEw1RTBIQkF6MGxueGl0Wm4KeUlFMkJIRUptTGtQdTAxa04yK2VKZTA2ZE5SbEF2UXlSYU50NXFFOXg5K0d0alhyOFM0NGk3ZE5EeVJWbFIxKwozV1d2MTcranJ6YUh1N3pCUHN3a0I3ZzlJeXQxWElVdFFtbjE3bFc5aXhobTNMaU0vbnhNb296THk0T3VhVm1zCjFENjI2V2V1dHc2amlEL3U1N0s1RUJ0cCswVWpRNWpJQXJNQUoycVFocW4wNWJXbnZPK1QrQzZkZldKYU5VQmMKQnIvcXlIdTRxdXNQcHVVS0lKOVU1cTFjZ014a01vNGQKLS0tLS1FTkQgQ0VSVElGSUNBVEUgUkVRVUVTVC0tLS0tCg==
+---
+# Role-based access control
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer
+  namespace: development
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["create", "list", "get", "update", "delete"]
+---
+# Binds a role to subjects
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: developer-role-binding
+  namespace: development
+subjects:
+  - kind: User
+    name: john
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: developer
+  apiGroup: rbac.authorization.k8s.io

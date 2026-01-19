@@ -1,0 +1,31 @@
+# First, taint the worker node with
+# kubectl taint node node01 env_type=production:NoSchedule
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dev-redis
+  labels:
+    app.kubernetes.io/name: dev-redis
+spec:
+  containers:
+    - name: dev-redis
+      image: redis:alpine
+      resources: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: prod-redis
+  labels:
+    app.kubernetes.io/name: prod-redis
+spec:
+  containers:
+    - name: prod-redis
+      image: redis:alpine
+      resources: {}
+  tolerations:
+    - key: env_type
+      operator: Equal
+      value: production
+      effect: NoSchedule
