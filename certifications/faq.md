@@ -31,3 +31,14 @@ pages, you should be good.
 
 **A**. The command to switch to the right cluster/context will be given at the top of each question. Make sure you run
 that always. Even if you think you are on the right cluster/context!
+
+The Linux Foundation has a zero tolerance rule in regard to anyone who engages in Exam Misconduct. The exams are
+administered under strict supervision and exam rules, and are carefully monitored during the live exam, and upon
+completion of the exam, the session recording is reviewed. Any suspicious activity will be addressed and will result in
+consequences including, but not limited to, revoking a passing score and restricting an individual’s ability to take an
+exam again.
+
+- https://docs.linuxfoundation.org/tc-docs/certification/lf-cert-agreement
+- https://docs.linuxfoundation.org/tc-docs/certification/lf-handbook2/exam-rules-and-policies
+- https://helpdesk.psionline.com/hc/en-gb/articles/4409608794260-PSI-secure-browser-and-Chrome-Extension-System-Requirements
+- https://docs.linuxfoundation.org/tc-docs/certification/lf-handbook2/candidate-requirements#testing-environment-requirements
