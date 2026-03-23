@@ -59,7 +59,7 @@ leader will terminate itself even if it's network-isolated.
 
 In a HA scenario, you should run etcd clusters on dedicated machines separated from the master nodes to guarantee
 resource requirements. In a etcd cluster, data is replicated without race conditions using the
-[Raft Consensus Algorithm ](https://raft.github.io/):
+[Raft Consensus Algorithm](https://raft.github.io/):
 
 - before the leader is selected, a random timer is kicked off on every node. The first to finish its timer notifies the
   others and tries to become the leader
