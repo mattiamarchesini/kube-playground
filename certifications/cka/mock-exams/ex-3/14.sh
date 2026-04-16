@@ -1,1 +1,0 @@
-kubectl get node controlplane -o jsonpath='{.spec.podCIDR}' > /root/pod-cidr.txt

@@ -25,6 +25,10 @@ spec:
             secretKeyRef:
               name: my-app-secrets # The name of the Secrets file
               key: database.psw # The key within the Secrets to use
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
       # Without explicit resource definitions, the scheduler doesn't know how much resource your container needs, and
       # the kubelet doesn't know how to enforce limits.
       resources:

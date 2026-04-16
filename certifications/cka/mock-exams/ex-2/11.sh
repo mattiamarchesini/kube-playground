@@ -1,1 +1,0 @@
-kubectl apply -f /root/net-pol-3.yaml
