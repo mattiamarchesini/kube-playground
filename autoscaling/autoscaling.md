@@ -2,9 +2,9 @@
 
 3 types of auto-scalers
 
-- cluster (not part of CKA exam)
 - horizontal pod
 - vertical pod
+- cluster (not part of CKA exam)
 
 ## Horizontal pod scaling
 
@@ -61,3 +61,9 @@ The VPA is divided into 3 different pods:
 - **updater**: detects pods and evicts them when they are running with sub-optimal resources and an update is needed
 - **admission-controller**: intervenes in the pod creation process, using the recommendations from the recommender to
   update the pod specs accordingly.
+
+## Cluster Autoscaler (CA)
+
+Increases or decreases the number of Nodes in the cluster when Pods can't be scheduled due to lack of resources.
+
+This is typically a cloud-provider specific component (GKE, EKS, AKS) rather than a core Kubernetes binary you manage manually in the CKA.
